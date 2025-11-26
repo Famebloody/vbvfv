@@ -3,6 +3,7 @@ scoreboard_query.onSnapshot(
     if (!documentSnapshot.exists)
       return;
     $(".hidden").removeClass("hidden");
+    $('.reset-btn').text('Сброс');
     scoreboard_data = documentSnapshot.data();
     console.log(scoreboard_data);
     $('.away_team').html(scoreboard_data['away_team'])
@@ -42,17 +43,6 @@ function update_db(data) {
   scoreboard_query.update(data);
 }
 $(document).ready(function () {
-  // // On load: check if document exists. If not, show "Начать" on reset button; otherwise unhide controls.
-  // try {
-  //   scoreboard_query.get().then(function (doc) {
-  //     if (!doc.exists) {
-  //       $('#reset-btn').text('Начать');
-  //     } else {
-  //       $('#reset-btn').text('Сброс');
-  //       $(".hidden").removeClass("hidden");
-  //     }
-  //   }).catch(function (e) { console.warn('Error checking scoreboard doc', e); });
-  // } catch (e) { console.warn('scoreboard_query not ready', e); }
   $(".show-select").click(function () {
     var button = $(this).data('val');
     update_db({ show: button })
@@ -98,7 +88,7 @@ $(document).ready(function () {
     update_db(update);
   });
   $(".reset-btn").click(function () {
-    var data = {
+    scoreboard_collection.doc(game_id).set({
       show: 0,
       home_score: 0,
       home_fouls: 0,
@@ -110,12 +100,7 @@ $(document).ready(function () {
       away_color: $("#col_away_team").val(),
       home_team: $("#in_home_team").val(),
       home_color: $("#col_home_team").val(),
-    };
-    scoreboard_collection.doc(game_id).set(data).then(function () {
-      // After initialization, show controls and change button text
-      $(".hidden").removeClass("hidden");
-      $('.reset-btn').text('Сброс');
-    }).catch(function (e) { console.error('Failed to reset/init doc', e); });
+    });
   });
   $(".period-btn").click(function () {
     var button = $(this);

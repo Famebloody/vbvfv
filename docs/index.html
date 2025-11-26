@@ -55,7 +55,6 @@
         var button = document.getElementById(buttonId);
         var originalText = button.textContent;
 
-        // Используем Clipboard API если доступен, иначе fallback
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text)
             .then(function () {
